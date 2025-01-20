@@ -1,0 +1,1414 @@
+openapi: 3.0.3
+info:
+  title: MediGo API
+  description: API for managing the 11-minute medicine delivery platform, including user registration, order processing, and delivery management.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8081/v1
+    description: Local server for testing
+
+components:
+  schemas:
+    # Delivery Create Schema
+    DeliveryCreate:
+      type: object
+      properties:
+        order_id:
+          type: string
+          format: uuid
+        delivery_person_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+        estimated_delivery_time:
+          type: string
+          format: date-time
+      required:
+        - order_id
+        - delivery_person_id
+        - status
+        - estimated_delivery_time
+
+    # Delivery Schema (for returning a delivery object)
+    Delivery:
+      type: object
+      properties:
+        delivery_id:
+          type: string
+          format: uuid
+        order_id:
+          type: string
+          format: uuid
+        delivery_person_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+        estimated_delivery_time:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - delivery_id
+        - order_id
+        - delivery_person_id
+        - status
+        - estimated_delivery_time
+        - created_at
+        - updated_at
+
+    # Delivery Update Schema
+    DeliveryUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+        estimated_delivery_time:
+          type: string
+          format: date-time
+      required:
+        - status
+        - estimated_delivery_time
+    # DeliveryPersonCreate Schema (used for creating a new delivery person)
+    DeliveryPersonCreate:
+      type: object
+      properties:
+        name:
+          type: string
+        phone:
+          type: string
+        vehicle_type:
+          type: string
+        vehicle_number:
+          type: string
+        vehicle_img:
+          type: string
+          format: byte
+        license_photo:
+          type: string
+          format: byte
+        rc:
+          type: string
+          format: byte
+        aadhar_govt_id:
+          type: string
+          format: byte
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - name
+        - phone
+        - vehicle_type
+        - created_at
+        - updated_at
+
+    # DeliveryPerson Schema (used for returning a delivery person)
+    DeliveryPerson:
+      type: object
+      properties:
+        delivery_person_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        phone:
+          type: string
+        vehicle_type:
+          type: string
+        vehicle_number:
+          type: string
+        vehicle_img:
+          type: string
+          format: byte
+        license_photo:
+          type: string
+          format: byte
+        rc:
+          type: string
+          format: byte
+        aadhar_govt_id:
+          type: string
+          format: byte
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - delivery_person_id
+        - name
+        - phone
+        - vehicle_type
+        - created_at
+        - updated_at
+
+    # DeliveryPersonUpdate Schema (used for updating a delivery person)
+    DeliveryPersonUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        phone:
+          type: string
+        vehicle_type:
+          type: string
+        vehicle_number:
+          type: string
+        vehicle_img:
+          type: string
+          format: byte
+        license_photo:
+          type: string
+          format: byte
+        rc:
+          type: string
+          format: byte
+        aadhar_govt_id:
+          type: string
+          format: byte
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    # OrderConfirmationBase Schema (Base schema for order confirmation)
+    OrderConfirmationBase:
+      type: object
+      properties:
+        confirmation_status:
+          type: string
+        confirmation_timestamp:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+      required:
+        - confirmation_status
+        - confirmation_timestamp
+        - created_at
+
+    # OrderConfirmationCreate Schema (Used for creating a new order confirmation)
+    OrderConfirmationCreate:
+      type: object
+      properties:
+        confirmation_status:
+          type: string
+        confirmation_timestamp:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        order_id:
+          type: string
+          format: uuid
+      required:
+        - confirmation_status
+        - confirmation_timestamp
+        - created_at
+        - order_id
+
+    # OrderConfirmationUpdate Schema (Used for updating an existing order confirmation)
+    OrderConfirmationUpdate:
+      type: object
+      properties:
+        confirmation_status:
+          type: string
+        confirmation_timestamp:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+      required:
+        - confirmation_status
+        - confirmation_timestamp
+        - created_at
+
+    # OrderConfirmation Schema (Used for returning the order confirmation object)
+    OrderConfirmation:
+      type: object
+      properties:
+        confirmation_id:
+          type: string
+          format: uuid
+        order_id:
+          type: string
+          format: uuid
+        confirmation_status:
+          type: string
+        confirmation_timestamp:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+      required:
+        - confirmation_id
+        - order_id
+        - confirmation_status
+        - confirmation_timestamp
+        - created_at
+    # OrderBase Schema (Base schema for order)
+    OrderBase:
+      type: object
+      properties:
+        medicine_names:
+          type: string
+        store_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+        total_amount:
+          type: number
+          format: float
+        payment_status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - medicine_names
+        - store_id
+        - status
+        - total_amount
+        - payment_status
+        - created_at
+        - updated_at
+
+    # OrderCreate Schema (Used for creating a new order)
+    OrderCreate:
+      type: object
+      properties:
+        medicine_names:
+          type: string
+        store_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+        total_amount:
+          type: number
+          format: float
+        payment_status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        order_id:
+          type: string
+          format: uuid
+      required:
+        - medicine_names
+        - store_id
+        - status
+        - total_amount
+        - payment_status
+        - created_at
+        - updated_at
+        - order_id
+
+    # OrderUpdate Schema (Used for updating an existing order)
+    OrderUpdate:
+      type: object
+      properties:
+        medicine_names:
+          type: string
+        store_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+        total_amount:
+          type: number
+          format: float
+        payment_status:
+          type: string
+
+    # Order Schema (Used for returning the order object)
+    Order:
+      type: object
+      properties:
+        order_id:
+          type: string
+          format: uuid
+        medicine_names:
+          type: string
+        store_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+        total_amount:
+          type: number
+          format: float
+        payment_status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - order_id
+        - medicine_names
+        - store_id
+        - status
+        - total_amount
+        - payment_status
+        - created_at
+        - updated_at
+    # StoreBase Schema (Base schema for store)
+    StoreBase:
+      type: object
+      properties:
+        store_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        address:
+          type: string
+        contact_email:
+          type: string
+          format: email
+        phone:
+          type: string
+        proprietor_name:
+          type: string
+          nullable: true
+        dl_no:
+          type: string
+          nullable: true
+        dl_license_photo:
+          type: string
+          nullable: true
+        gst_pan_number:
+          type: string
+          nullable: true
+        gst_certificate_img:
+          type: string
+          nullable: true
+        govt_id:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - store_id
+        - name
+        - address
+        - contact_email
+        - phone
+        - created_at
+        - updated_at
+
+    # StoreCreate Schema (Used for creating a new store)
+    StoreCreate:
+      allOf:
+        - $ref: '#/components/schemas/StoreBase'
+
+    # StoreUpdate Schema (Used for updating an existing store)
+    StoreUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        address:
+          type: string
+        contact_email:
+          type: string
+          format: email
+        phone:
+          type: string
+        proprietor_name:
+          type: string
+        dl_no:
+          type: string
+        dl_license_photo:
+          type: string
+        gst_pan_number:
+          type: string
+        gst_certificate_img:
+          type: string
+        govt_id:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+
+    # Store Schema (Used for returning the store object)
+    Store:
+      allOf:
+        - $ref: '#/components/schemas/StoreBase'
+      properties:
+        store_id:
+          type: string
+          format: uuid
+      required:
+        - store_id
+    # UserBase Schema (Base schema for user data)
+    UserBase:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - user_id
+        - name
+        - email
+        - created_at
+        - updated_at
+
+    # UserCreate Schema (Used for creating a new user)
+    UserCreate:
+      allOf:
+        - $ref: '#/components/schemas/UserBase'
+      properties:
+        password:
+          type: string
+      required:
+        - password
+
+    # UserUpdate Schema (Used for updating an existing user)
+    UserUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        updated_at:
+          type: string
+          format: date-time
+
+    # User Schema (Used for returning a user object)
+    User:
+      allOf:
+        - $ref: '#/components/schemas/UserBase'
+      properties:
+        user_id:
+          type: string
+          format: uuid
+      required:
+        - user_id
+    # EntityBase Schema (Base schema for entity data)
+    EntityBase:
+      type: object
+      properties:
+        entity_id:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - entity_id
+        - created_at
+        - updated_at
+
+    # Entity Schema (Used for creating or returning an entity)
+    Entity:
+      allOf:
+        - $ref: '#/components/schemas/EntityBase'
+      properties:
+        entity_id:
+          type: string
+          format: uuid
+      required:
+        - entity_id
+    # PaymentBase Schema (Base schema for payment)
+    PaymentBase:
+      type: object
+      properties:
+        order_id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        amount:
+          type: number
+          format: float
+        payment_method:
+          type: string
+        payment_status:
+          type: string
+        payment_timestamp:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - order_id
+        - user_id
+        - amount
+        - payment_method
+        - payment_status
+        - payment_timestamp
+        - created_at
+        - updated_at
+
+    # PaymentCreate Schema (Used for creating a new payment)
+    PaymentCreate:
+      type: object
+      properties:
+        order_id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        amount:
+          type: number
+          format: float
+        payment_method:
+          type: string
+        payment_status:
+          type: string
+        payment_timestamp:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - order_id
+        - user_id
+        - amount
+        - payment_method
+        - payment_status
+        - payment_timestamp
+        - created_at
+        - updated_at
+
+    # PaymentUpdate Schema (Used for updating an existing payment)
+    PaymentUpdate:
+      type: object
+      properties:
+        order_id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        amount:
+          type: number
+          format: float
+        payment_method:
+          type: string
+        payment_status:
+          type: string
+        payment_timestamp:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    # Payment Schema (Used for returning the payment object)
+    Payment:
+      type: object
+      properties:
+        payment_id:
+          type: string
+          format: uuid
+        order_id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        amount:
+          type: number
+          format: float
+        payment_method:
+          type: string
+        payment_status:
+          type: string
+        payment_timestamp:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - payment_id
+        - order_id
+        - user_id
+        - amount
+        - payment_method
+        - payment_status
+        - payment_timestamp
+        - created_at
+        - updated_at
+
+paths:
+  # Delivery Endpoints
+  /deliveries/:
+    post:
+      summary: Create a new delivery
+      operationId: create_delivery
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeliveryCreate'
+        required: true
+      responses:
+        '201':
+          description: Delivery created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Delivery'
+
+  /deliveries/{delivery_id}:
+    get:
+      summary: Get a delivery by ID
+      operationId: get_delivery_by_id
+      parameters:
+        - name: delivery_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Delivery found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Delivery'
+        '404':
+          description: Delivery not found
+
+    put:
+      summary: Update a specific delivery
+      operationId: update_delivery
+      parameters:
+        - name: delivery_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeliveryUpdate'
+        required: true
+      responses:
+        '200':
+          description: Delivery updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Delivery'
+        '404':
+          description: Delivery not found
+
+    delete:
+      summary: Delete a specific delivery
+      operationId: delete_delivery
+      parameters:
+        - name: delivery_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Delivery deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Delivery deleted successfully"
+        '404':
+          description: Delivery not found
+  # DeliveryPerson Endpoints
+  /delivery-persons/:
+    post:
+      summary: Create a new delivery person
+      operationId: create_delivery_person
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DeliveryPersonCreate'
+        required: true
+      responses:
+        '201':
+          description: Delivery person created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliveryPerson'
+
+  /delivery-persons/{delivery_person_id}:
+    get:
+      summary: Get a delivery person by ID
+      operationId: get_delivery_person
+      parameters:
+        - name: delivery_person_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Delivery person found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliveryPerson'
+        '404':
+          description: Delivery person not found
+
+    put:
+      summary: Update a delivery person by ID
+      operationId: update_delivery_person
+      parameters:
+        - name: delivery_person_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DeliveryPersonUpdate'
+        required: true
+      responses:
+        '200':
+          description: Delivery person updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliveryPerson'
+        '404':
+          description: Delivery person not found
+
+    delete:
+      summary: Delete a delivery person by ID
+      operationId: delete_delivery_person
+      parameters:
+        - name: delivery_person_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Delivery person deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Delivery person deleted successfully"
+        '404':
+          description: Delivery person not found
+
+  /order-confirmation/:
+    post:
+      summary: Create a new order confirmation
+      operationId: create_order_confirmation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderConfirmationCreate'
+        required: true
+      responses:
+        '201':
+          description: Order confirmation created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderConfirmation'
+
+  /order-confirmation/{order_id}:
+    get:
+      summary: Get an order confirmation by order ID
+      operationId: get_order_confirmation
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Order confirmation found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderConfirmation'
+        '404':
+          description: Order confirmation not found
+
+  /order-confirmation/{confirmation_id}:
+    put:
+      summary: Update an existing order confirmation
+      operationId: update_order_confirmation
+      parameters:
+        - name: confirmation_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderConfirmationUpdate'
+        required: true
+      responses:
+        '200':
+          description: Order confirmation updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderConfirmation'
+        '404':
+          description: Order confirmation not found
+
+    delete:
+      summary: Delete an order confirmation by confirmation ID
+      operationId: delete_order_confirmation
+      parameters:
+        - name: confirmation_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Order confirmation deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Order confirmation deleted successfully"
+        '404':
+          description: Order confirmation not found
+
+  /orders/:
+    post:
+      summary: Create a new order
+      operationId: create_order
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderCreate'
+        required: true
+      responses:
+        '201':
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+
+  /orders/{order_id}:
+    get:
+      summary: Get an order by order ID
+      operationId: get_order
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Order found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '404':
+          description: Order not found
+    put:
+      summary: Update an existing order
+      operationId: update_order
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderUpdate'
+        required: true
+      responses:
+        '200':
+          description: Order updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '404':
+          description: Order not found
+
+    delete:
+      summary: Delete an order by order ID
+      operationId: delete_order
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Order deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Order deleted successfully"
+        '404':
+          description: Order not found
+  /payments/:
+    post:
+      summary: Create a new payment
+      operationId: create_payment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentCreate'
+        required: true
+      responses:
+        '201':
+          description: Payment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+
+  /payments/{payment_id}:
+    get:
+      summary: Get a payment by payment ID
+      operationId: get_payment
+      parameters:
+        - name: payment_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Payment found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '404':
+          description: Payment not found
+    put:
+      summary: Update an existing payment
+      operationId: update_payment
+      parameters:
+        - name: payment_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentUpdate'
+        required: true
+      responses:
+        '200':
+          description: Payment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '404':
+          description: Payment not found
+
+    delete:
+      summary: Delete a payment by payment ID
+      operationId: delete_payment
+      parameters:
+        - name: payment_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Payment deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Payment deleted successfully"
+        '404':
+          description: Payment not found
+
+  /stores/:
+    post:
+      summary: Create a new store
+      operationId: create_store
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreCreate'
+        required: true
+      responses:
+        '201':
+          description: Store created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+
+  /stores/{store_id}:
+    get:
+      summary: Get a store by store ID
+      operationId: get_store
+      parameters:
+        - name: store_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Store found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+        '404':
+          description: Store not found
+
+    put:
+      summary: Update an existing store
+      operationId: update_store
+      parameters:
+        - name: store_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoreUpdate'
+        required: true
+      responses:
+        '200':
+          description: Store updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+        '404':
+          description: Store not found
+
+    delete:
+      summary: Delete a store by store ID
+      operationId: delete_store
+      parameters:
+        - name: store_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Store deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Store deleted successfully"
+        '404':
+          description: Store not found
+
+  /users/:
+    post:
+      summary: Create a new user
+      operationId: create_user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+        required: true
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /users/{user_id}:
+    get:
+      summary: Get a user by user ID
+      operationId: get_user
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+
+    put:
+      summary: Update an existing user
+      operationId: update_user
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+        required: true
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+
+    delete:
+      summary: Delete a user by user ID
+      operationId: delete_user
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User deleted successfully"
+        '404':
+          description: User not found
+
+  /entities/:
+    post:
+      summary: Create a new entity
+      operationId: create_entity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EntityBase'
+        required: true
+      responses:
+        '201':
+          description: Entity created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+        '400':
+          description: Bad request
+
+  /entities/{entity_id}:
+    get:
+      summary: Get an entity by entity ID
+      operationId: get_entity
+      parameters:
+        - name: entity_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Entity found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+        '404':
+          description: Entity not found
+
+    put:
+      summary: Update an existing entity
+      operationId: update_entity
+      parameters:
+        - name: entity_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EntityBase'
+        required: true
+      responses:
+        '200':
+          description: Entity updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+        '404':
+          description: Entity not found
+
+    delete:
+      summary: Delete an entity by entity ID
+      operationId: delete_entity
+      parameters:
+        - name: entity_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Entity deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Entity deleted successfully"
+        '404':
+          description: Entity not found
+
