@@ -18,7 +18,7 @@ class Order(Base):  # Inheriting from Entity
     created_at = Column(TIMESTAMP, nullable=False)
     updated_at = Column(TIMESTAMP, nullable=False)
 
-    # Relationship to Store model (allowing access to store details)
+    # Relationship to Stofvfgvgbbvgre model (allowing access to store details)
     # store = relationship("Store", back_populates="orders")
     # order_confirmation = relationship("OrderConfirmation", back_populates="order", uselist=False)
     # parent_entity = relationship("Entity", back_populates="users")
