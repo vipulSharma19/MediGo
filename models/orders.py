@@ -2,6 +2,7 @@ from sqlalchemy import Column, String, UUID, ForeignKey, Text, DECIMAL, TIMESTAM
 from sqlalchemy.orm import relationship
 from models.entity import Entity
 import uuid
+from sqlalchemy import Column, BigInteger, TIMESTAMP
 from database import Base
 
 class Order(Base):  # Inheriting from Entity
@@ -9,7 +10,7 @@ class Order(Base):  # Inheriting from Entity
 
     order_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     medicine_names = Column(Text, nullable=False)
-    user_id = Column(UUID(as_uuid=True), ForeignKey('users.user_id'), nullable=False)
+    user_id = Column(BigInteger, ForeignKey('users.user_id'), nullable=False)  # Change UUID to Integer
     store_id = Column(UUID(as_uuid=True), ForeignKey('stores.store_id'), nullable=False)
     status = Column(String(50), nullable=False, default="pending")
     total_amount = Column(DECIMAL, nullable=False)

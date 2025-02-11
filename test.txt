@@ -1,0 +1,10 @@
+{
+  "user_id": "+1234567890",
+  "name": "John Doe",
+  "medicines": ["Paracetamol", "Ibuprofen"],
+  "address": "123 Main Street, Springfield, IL, USA",
+  "latitude": 39.7817,
+  "longitude": -89.6501,
+  "contact_person": "Jane Doe",
+  "contact_phone": "+1987654321"
+}

@@ -1,20 +1,3 @@
-# from utils.llm import LLM
-#
-# llm = LLM()
-#
-# # Example Input
-# raw_input = """
-# Hi, I'm John Doe. I'd like to order 2 strips of Paracetamol 500mg, one bottle of Cough Syrup, and 3 boxes of Aspirin 300mg.
-# Can you deliver them to my office at 789 Oak Avenue, Springfield?
-# Please ensure it's delivered before 5 PM, and let me know the total cost. Also, if possible, include Vitamin C tablets in my order. Thanks!
-# """
-#
-# # Parse the user input
-# parsed_details = llm.parse_user_details(raw_input)
-#
-# print("Parsed Details:", parsed_details)
-
-
 from fastapi import FastAPI, Request
 from pydantic import BaseModel
 from typing import Optional
@@ -22,11 +5,33 @@ from fastapi import FastAPI, Request, Depends
 from database import get_db
 from models import User, Order, Store, Delivery
 from utils import llm
-from controllers import user_controller, order_controller, store_controller, delivery_controller
+from fastapi.responses import JSONResponse
+from controllers import user_controller, order_controller, store_controller, delivery_controller, store_request_controller
 import requests
 from tasks import process_webhook_task
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+import asyncio
+import httpx
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 app = FastAPI()
+active_connections = {}  # Store active WebSocket connections (store_id -> WebSocket)
+SENSY_WHATSAPP_ENDPOINT = "http://localhost:8000/senddata"  # Replace with actual Sensy AI endpoint
+
+
+@app.websocket("/ws/{store_id}")
+async def websocket_endpoint(websocket: WebSocket, store_id: str):
+    """ WebSocket connection for store updates. """
+    await websocket.accept()
+    active_connections[store_id] = websocket
+    try:
+        while True:
+            await websocket.receive_text()  # Keep connection alive
+    except WebSocketDisconnect:
+        del active_connections[store_id]  # Remove disconnected WebSocket
 
 
 class MessagePayload(BaseModel):
@@ -44,48 +49,83 @@ async def receive_message(request: Request):
 
 
 # # WhatsApp Webhook to Receive Messages
+@app.post("/webhook")
+async def receive_message(request: Request):
+    body = await request.json()
+    user_data=llm.LLM.parse_user_details()
+
+    user_id = user_data.get("user_id")
+    Name = user_data.get("name", "").lower()
+    address = user_data.get("address")
+    medicine = user_data.get("medicines")
+    longitude = user_data.get("longitude", "")
+    latitude = user_data.get("latitude", "")
+    contact_phone = user_data.get("contact_phone")
+    # address = f"{latitude} {longitude}"  # Proper string formatting
+
+    user = user_controller.get_user(user_id=user_id)
+
+    if not user:
+        user_data = {
+            "phone": user_id,
+            "name": Name,
+            "address": address
+        }
+        return await user_controller.create_user(user_data)  # Passing JSON directly
+
+    nearby_store = store_controller.find_nearest_store(latitude, longitude)
+    nearby_store_id=nearby_store['store_id']
+    print("Nearby stores : ", nearby_store)
+
+    # Step 3: Send medicine request to store
+    response = await store_request_controller.send_medicine_request(nearby_store_id, medicine, user_id, Name, address)
+    if response.status_code != 200:
+        return JSONResponse(content={"message": "Failed to send request to store"}, status_code=500)
+
+    # Step 4: Wait for store confirmation via WebSocket
+    try:
+        websocket = active_connections.get(nearby_store_id)
+        if websocket:
+            confirmed_medicines = await websocket.receive_json()
+
+            return JSONResponse(
+                content={
+                    "message": "Store confirmed available medicines",
+                    "available_medicines": confirmed_medicines
+                }
+            )
+
+        else:
+            return JSONResponse(content={"message": "Waiting for store confirmation..."}, status_code=202)
+
+    except asyncio.TimeoutError:
+        return JSONResponse(content={"message": "Store has not confirmed the order yet"}, status_code=202)
+
+
+
+
 # @app.post("/webhook")
 # async def receive_message(request: Request):
 #     body = await request.json()
-#     # user_data=llm.LLM.parse_user_details()
 #
 #     user_id = body.get("Phone")
 #     Name = body.get("name", "").lower()
 #     longitude = body.get("long_longitude", "")
 #     latitude = body.get("lat_latitude", "")
-#     address = f"{latitude} {longitude}"  # Proper string formatting
-#     user = user_controller.get_user(user_id=user_id)
+#     address = f"{latitude} {longitude}"
 #
-#     if not user:
-#         user_data = {
-#             "phone": user_id,
-#             "name": Name,
-#             "address": address
-#         }
-#         return await user_controller.create_user(user_data)  # Passing JSON directly
+#     user_data = {
+#         "phone": user_id,
+#         "name": Name,
+#         "address": address
+#     }
 #
-# # @app.post("/webhook")
-# # async def receive_message(request: Request):
-# #     body = await request.json()
-# #
-# #     user_id = body.get("Phone")
-# #     Name = body.get("name", "").lower()
-# #     longitude = body.get("long_longitude", "")
-# #     latitude = body.get("lat_latitude", "")
-# #     address = f"{latitude} {longitude}"
-# #
-# #     user_data = {
-# #         "phone": user_id,
-# #         "name": Name,
-# #         "address": address
-# #     }
-# #
-# #     # Enqueue task to process user asynchronously
-# #     process_webhook_task.delay(user_data)
-# #
-# #     return {"status": "processing_in_background"}
+#     # Enqueue task to process user asynchronously
+#     process_webhook_task.delay(user_data)
 #
-#
+#     return {"status": "processing_in_background"}
+
+
 # # Step 1: Request User Details for New Users
 # @app.post("/user_details")
 # async def request_user_details(request: Request):

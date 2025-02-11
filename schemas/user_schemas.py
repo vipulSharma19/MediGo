@@ -5,9 +5,9 @@ from typing import Optional
 
 # Base schema for common fields
 class UserBase(BaseModel):
-    user_id: UUID
+    user_id: str  # Using user_id as the phone number
     name: str
-    email: EmailStr
+    # email: EmailStr
     created_at: datetime
     updated_at: datetime
 
@@ -18,12 +18,12 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     address: str
     phone: str
-    password: str  # Include password during creation
+    # password: str  # Include password during creation
 
 # Schema for updating an existing user
 class UserUpdate(BaseModel):
     name: Optional[str]
-    email: Optional[EmailStr]
+    # email: Optional[EmailStr]
     updated_at: Optional[datetime]
 
     class Config:

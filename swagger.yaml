@@ -381,58 +381,58 @@ components:
         - created_at
         - updated_at
     # StoreBase Schema (Base schema for store)
-    StoreBase:
-      type: object
-      properties:
-        store_id:
-          type: string
-          format: uuid
-        name:
-          type: string
-        address:
-          type: string
-        contact_email:
-          type: string
-          format: email
-        phone:
-          type: string
-        proprietor_name:
-          type: string
-          nullable: true
-        dl_no:
-          type: string
-          nullable: true
-        dl_license_photo:
-          type: string
-          nullable: true
-        gst_pan_number:
-          type: string
-          nullable: true
-        gst_certificate_img:
-          type: string
-          nullable: true
-        govt_id:
-          type: string
-          nullable: true
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
-      required:
-        - store_id
-        - name
-        - address
-        - contact_email
-        - phone
-        - created_at
-        - updated_at
+      StoreBase:
+        type: object
+        properties:
+          store_id:
+            type: string
+            format: uuid
+          name:
+            type: string
+          address:
+            type: string
+          email:
+            type: string
+            format: email
+          phone:
+            type: string
+          proprietor_name:
+            type: string
+            nullable: true
+          dl_no:
+            type: string
+            nullable: true
+          dl_license_photo:
+            type: string
+            nullable: true
+          gst_pan_number:
+            type: string
+            nullable: true
+          gst_certificate_img:
+            type: string
+            nullable: true
+          govt_id:
+            type: string
+            nullable: true
+          created_at:
+            type: string
+            format: date-time
+          updated_at:
+            type: string
+            format: date-time
+        required:
+          - store_id
+          - name
+          - address
+          - email
+          - phone
+          - created_at
+          - updated_at
 
-    # StoreCreate Schema (Used for creating a new store)
-    StoreCreate:
-      allOf:
-        - $ref: '#/components/schemas/StoreBase'
+      # StoreCreate Schema (Used for creating a new store)
+      StoreCreate:
+        allOf:
+          - $ref: '#/components/schemas/StoreBase'
 
     # StoreUpdate Schema (Used for updating an existing store)
     StoreUpdate:
@@ -442,7 +442,7 @@ components:
           type: string
         address:
           type: string
-        contact_email:
+        email:
           type: string
           format: email
         phone:
@@ -478,13 +478,9 @@ components:
       type: object
       properties:
         user_id:
-          type: string
-          format: uuid
+          type: number
         name:
           type: string
-        email:
-          type: string
-          format: email
         created_at:
           type: string
           format: date-time
@@ -494,7 +490,6 @@ components:
       required:
         - user_id
         - name
-        - email
         - created_at
         - updated_at
 
@@ -503,10 +498,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/UserBase'
       properties:
-        password:
-          type: string
-      required:
-        - password
+      required: []
 
     # UserUpdate Schema (Used for updating an existing user)
     UserUpdate:
@@ -514,9 +506,6 @@ components:
       properties:
         name:
           type: string
-        email:
-          type: string
-          format: email
         updated_at:
           type: string
           format: date-time
@@ -527,8 +516,7 @@ components:
         - $ref: '#/components/schemas/UserBase'
       properties:
         user_id:
-          type: string
-          format: uuid
+          type: number
       required:
         - user_id
     # EntityBase Schema (Base schema for entity data)
@@ -567,8 +555,7 @@ components:
           type: string
           format: uuid
         user_id:
-          type: string
-          format: uuid
+          type: number
         amount:
           type: number
           format: float
@@ -603,8 +590,7 @@ components:
           type: string
           format: uuid
         user_id:
-          type: string
-          format: uuid
+          type: number
         amount:
           type: number
           format: float
@@ -639,8 +625,7 @@ components:
           type: string
           format: uuid
         user_id:
-          type: string
-          format: uuid
+          type: number
         amount:
           type: number
           format: float
@@ -669,8 +654,7 @@ components:
           type: string
           format: uuid
         user_id:
-          type: string
-          format: uuid
+          type: number
         amount:
           type: number
           format: float

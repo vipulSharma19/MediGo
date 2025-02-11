@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from models.orders import Order
-
+from datetime import datetime
 class OrderDAL:
     @classmethod
     def create_order(cls, db: Session, **kwargs):
@@ -27,6 +27,14 @@ class OrderDAL:
         db.commit()
         db.refresh(order)
         return order
+
+    @classmethod
+    def update_order_status(cls, db: Session, order_id: str, status: str):
+        order = cls.get_order_by_id(db, order_id)
+        if order:
+            order.status = status
+            order.updated_at = datetime.utcnow()  # Update timestamp
+            db.commit()
 
     @classmethod
     def delete_order(cls, db: Session, order_id: str):
