@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends, UploadFile, File
 from sqlalchemy.orm import Session
 from database import get_db
+from pydantic import BaseModel, EmailStr
 from DAL_files import delivery_person_dal
 from schemas import delivery_person_schemas
 router = APIRouter()
@@ -8,7 +9,8 @@ router = APIRouter()
 @router.post("/delivery-persons/", response_model=delivery_person_schemas.DeliveryPerson)
 def create_delivery_person(
     name: str,
-    contact_number: str,
+    phone: str,
+    email: str = None,
     vehicle_number: str = None,
     vehicle_img: UploadFile = File(None),
     license_photo: UploadFile = File(None),
@@ -20,8 +22,9 @@ def create_delivery_person(
         # Create a dictionary of incoming fields
         data = {
             "name": name,
-            "contact_number": contact_number,
+            "contact_number": phone,
             "vehicle_number": vehicle_number,
+            "email": email,
             "vehicle_img": vehicle_img,
             "license_photo": license_photo,
             "rc": rc,
@@ -46,7 +49,8 @@ def get_delivery_person(delivery_person_id: str, db: Session = Depends(get_db)):
 def update_delivery_person(
     delivery_person_id: str,
     name: str = None,
-    contact_number: str = None,
+    phone: str = None,
+    email: str = None,
     vehicle_number: str = None,
     vehicle_img: UploadFile = File(None),
     license_photo: UploadFile = File(None),
@@ -58,7 +62,8 @@ def update_delivery_person(
         # Create a dictionary of incoming fields
         data = {
             "name": name,
-            "contact_number": contact_number,
+            "contact_number": phone,
+            "email": email,
             "vehicle_number": vehicle_number,
             "vehicle_img": vehicle_img,
             "license_photo": license_photo,

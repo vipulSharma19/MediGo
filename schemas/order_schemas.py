@@ -7,6 +7,7 @@ from typing import Optional
 class OrderBase(BaseModel):
     medicine_names: str
     store_id: UUID
+    user_id: str
     status: str
     total_amount: float
     payment_status: str
@@ -19,6 +20,8 @@ class OrderBase(BaseModel):
 # Schema for creating a new order
 class OrderCreate(OrderBase):
     entity_id: UUID
+    user_id: str
+
 
 # Schema for updating an existing order
 class OrderUpdate(BaseModel):
@@ -35,6 +38,8 @@ class OrderUpdate(BaseModel):
 class Order(OrderCreate):
     order_id: UUID  # Unique order ID, inheriting from EntityBase
     entity_id: UUID  # Reference to the parent Entity
+    user_id: str
+
 
     class Config:
         orm_mode = True

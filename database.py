@@ -1,9 +1,15 @@
+import os
+
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 # Initialize the database engine (replace with your actual database URI)
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:vipul8318@localhost:5432/medigos"
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres:1234@localhost:5432/medigo"
 
 # Create the engine that will interact with the database
 engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True)

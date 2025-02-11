@@ -3,30 +3,30 @@ from uuid import UUID
 from datetime import datetime
 from typing import Optional
 
-# Base schema for common fields
 class StoreBase(BaseModel):
-    tenant_id: UUID
-    name: str  # Store name
+    store_id: UUID
+    name: str
     address: str
-    contact_email: EmailStr
+    email: Optional[EmailStr]
     phone: str
-    proprietor_name: Optional[str] = None  # Proprietor's name
-    dl_no: Optional[str] = None  # DL number
-    dl_license_photo: Optional[str] = None  # Base64-encoded DL license photo
-    gst_pan_number: Optional[str] = None  # GST/PAN number
-    gst_certificate_img: Optional[str] = None  # Base64-encoded GST certificate
-    govt_id: Optional[str] = None  # Government ID (e.g., Aadhar)
+    proprietor_name: Optional[str] = None
+    dl_no: Optional[str] = None
+    dl_license_photo: Optional[str] = None
+    gst_pan_number: Optional[str] = None
+    gst_certificate_img: Optional[str] = None
+    govt_id: Optional[str] = None
     created_at: datetime
     updated_at: datetime
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
 
     class Config:
         orm_mode = True
 
-# Schema for creating a new store
 class StoreCreate(StoreBase):
-    pass  # Use all fields from StoreBase for creation
+    latitude: float
+    longitude: float
 
-# Schema for updating an existing store
 class StoreUpdate(BaseModel):
     name: Optional[str]
     address: Optional[str]
@@ -39,13 +39,14 @@ class StoreUpdate(BaseModel):
     gst_certificate_img: Optional[str] = None
     govt_id: Optional[str] = None
     updated_at: Optional[datetime]
+    latitude: Optional[float]
+    longitude: Optional[float]
 
     class Config:
         orm_mode = True
 
-# Response schema for Store
 class Store(StoreBase):
-    store_id: UUID  # Unique identifier for the store
+    store_id: UUID
 
     class Config:
         orm_mode = True

@@ -1,6 +1,7 @@
 import base64
 from sqlalchemy.orm import Session
 from models.store import Store
+from sqlalchemy import text
 
 class StoreDAL:
     @classmethod
@@ -53,3 +54,27 @@ class StoreDAL:
         db.delete(store)
         db.commit()
         return True
+
+    @classmethod
+    def get_nearest_store(cls, db: Session, latitude: float, longitude: float):
+        """Find the nearest store using PostGIS ST_DistanceSphere."""
+        query = text("""
+            SELECT store_id, name, address, phone, email, 
+                   ST_DistanceSphere(location, ST_MakePoint(:longitude, :latitude)) AS distance
+            FROM stores
+            WHERE is_active = true
+            ORDER BY distance
+            LIMIT 3;
+        """)
+        result = db.execute(query, {"latitude": latitude, "longitude": longitude}).fetchone()
+
+        if result:
+            return {
+                "store_id": result.store_id,
+                "name": result.name,
+                "address": result.address,
+                "phone": result.phone,
+                "email": result.email,
+                "distance_meters": result.distance
+            }
+        return None

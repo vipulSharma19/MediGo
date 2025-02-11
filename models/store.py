@@ -2,8 +2,10 @@ from sqlalchemy import Column, String, DateTime, Boolean, UUID
 from sqlalchemy.orm import relationship
 from models.entity import Entity  # Importing the Entity class to inherit from
 import uuid
+from geoalchemy2 import Geography  # Import PostGIS support
 from sqlalchemy import Column, UUID, ForeignKey, DECIMAL, String, TIMESTAMP
 from database import Base
+from sqlalchemy import Column, String, DateTime, func
 
 
 class Store(Base):  # Now Store directly inherits from Entity
@@ -13,7 +15,7 @@ class Store(Base):  # Now Store directly inherits from Entity
     name = Column(String(255), nullable=False)
     address = Column(String(255), nullable=False)
     phone = Column(String(20), nullable=False)
-    email = Column(String(255), nullable=False)
+    email = Column(String(255), nullable=True)
     proprietor_name = Column(String, nullable=True)  # New field for proprietor name
     dl_no = Column(String, nullable=True)  # New field for DL number
     dl_license_photo = Column(String, nullable=True)  # Base64-encoded DL license photo
@@ -21,6 +23,10 @@ class Store(Base):  # Now Store directly inherits from Entity
     gst_certificate_img = Column(String, nullable=True)  # Base64-encoded GST certificate
     govt_id = Column(String, nullable=True)  # New field for government ID (e.g., Aadhar)
     is_active = Column(Boolean, default=True)  # Field to mark if the store is active
+    # location = Column(Geography(geometry_type="POINT", srid=4326), nullable=True)
+    created_at = Column(DateTime, server_default=func.now())  # Auto-set timestamp
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+
 
 
     # parent_entity = relationship("Entity", back_populates="users")
