@@ -567,9 +567,6 @@ components:
         payment_timestamp:
           type: string
           format: date-time
-        created_at:
-          type: string
-          format: date-time
         updated_at:
           type: string
           format: date-time
@@ -580,7 +577,6 @@ components:
         - payment_method
         - payment_status
         - payment_timestamp
-        - created_at
         - updated_at
 
     # PaymentCreate Schema (Used for creating a new payment)
@@ -602,9 +598,6 @@ components:
         payment_timestamp:
           type: string
           format: date-time
-        created_at:
-          type: string
-          format: date-time
         updated_at:
           type: string
           format: date-time
@@ -615,7 +608,6 @@ components:
         - payment_method
         - payment_status
         - payment_timestamp
-        - created_at
         - updated_at
 
     # PaymentUpdate Schema (Used for updating an existing payment)
@@ -635,9 +627,6 @@ components:
         payment_status:
           type: string
         payment_timestamp:
-          type: string
-          format: date-time
-        created_at:
           type: string
           format: date-time
         updated_at:
@@ -666,9 +655,6 @@ components:
         payment_timestamp:
           type: string
           format: date-time
-        created_at:
-          type: string
-          format: date-time
         updated_at:
           type: string
           format: date-time
@@ -680,7 +666,6 @@ components:
         - payment_method
         - payment_status
         - payment_timestamp
-        - created_at
         - updated_at
 
 paths:

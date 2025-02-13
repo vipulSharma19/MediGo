@@ -23,7 +23,7 @@ class Store(Base):  # Now Store directly inherits from Entity
     gst_certificate_img = Column(String, nullable=True)  # Base64-encoded GST certificate
     govt_id = Column(String, nullable=True)  # New field for government ID (e.g., Aadhar)
     is_active = Column(Boolean, default=True)  # Field to mark if the store is active
-    # location = Column(Geography(geometry_type="POINT", srid=4326), nullable=True)
+    location = Column(Geography(geometry_type="POINT", srid=4326), nullable=True)
     created_at = Column(DateTime, server_default=func.now())  # Auto-set timestamp
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 

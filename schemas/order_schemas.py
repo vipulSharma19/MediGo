@@ -19,7 +19,6 @@ class OrderBase(BaseModel):
 
 # Schema for creating a new order
 class OrderCreate(OrderBase):
-    entity_id: UUID
     user_id: str
 
 
@@ -37,7 +36,6 @@ class OrderUpdate(BaseModel):
 # Response schema for Order (including order_id)
 class Order(OrderCreate):
     order_id: UUID  # Unique order ID, inheriting from EntityBase
-    entity_id: UUID  # Reference to the parent Entity
     user_id: str
 
 

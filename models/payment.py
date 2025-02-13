@@ -7,6 +7,8 @@ from models.orders import Order  # Linking to the Order model
 from models.user import User  # Linking to the User model
 import uuid
 from database import Base
+from sqlalchemy import Column, String, DateTime, func
+
 
 class Payment(Base):  # Inheriting from Entity to have common fields
     __tablename__ = 'payments'
@@ -18,6 +20,7 @@ class Payment(Base):  # Inheriting from Entity to have common fields
     payment_method = Column(String(50), nullable=False)
     payment_status = Column(String(50), nullable=False, default="pending")
     payment_timestamp = Column(TIMESTAMP, nullable=False)
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
     # Relationships to other models
     orders = relationship("Order", back_populates="payments")

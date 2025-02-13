@@ -11,7 +11,6 @@ class PaymentBase(BaseModel):
     payment_method: str
     payment_status: str
     payment_timestamp: datetime
-    created_at: datetime
     updated_at: datetime
 
     class Config:
@@ -29,7 +28,6 @@ class PaymentUpdate(BaseModel):
     payment_method: Optional[str]
     payment_status: Optional[str]
     payment_timestamp: Optional[datetime]
-    created_at: Optional[datetime]
     updated_at: Optional[datetime]
 
     class Config:
