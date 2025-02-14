@@ -1378,4 +1378,3 @@ paths:
                     example: "Entity deleted successfully"
         '404':
           description: Entity not found
-

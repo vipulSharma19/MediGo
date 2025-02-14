@@ -9,7 +9,8 @@ import os
 load_dotenv()
 
 # Initialize the database engine (replace with your actual database URI)
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:1234@localhost:5432/medigo"
+
+SQLALCHEMY_DATABASE_URL = os.getenv("POSTGRES_URL")
 
 # Create the engine that will interact with the database
 engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=True)

@@ -54,22 +54,27 @@ class StoreDAL:
         db.delete(store)
         db.commit()
         return True
-    
-
+      
     @classmethod
     def get_nearest_store(cls, db: Session, latitude: float, longitude: float):
-        """Find the nearest active store based on the user's latitude and longitude."""
+        """Find the nearest store using PostGIS ST_DistanceSphere."""
         query = text("""
-            SELECT store_id, name
+            SELECT store_id, name, address, phone, email, 
+                   ST_DistanceSphere(location, ST_MakePoint(:longitude, :latitude)) AS distance
             FROM stores
-            ORDER BY ST_DistanceSphere(location, ST_MakePoint(:longitude, :latitude))
-            LIMIT 1;
+            WHERE is_active = true
+            ORDER BY distance
+            LIMIT 3;
         """)
         result = db.execute(query, {"latitude": latitude, "longitude": longitude}).fetchone()
-        print("result result",result)
+
         if result:
             return {
                 "store_id": result.store_id,
-                "name": result.name
+                "name": result.name,
+                "address": result.address,
+                "phone": result.phone,
+                "email": result.email,
+                "distance_meters": result.distance
             }
         return None
