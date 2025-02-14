@@ -10,8 +10,9 @@ class User(Base):
     __tablename__ = 'users'
 
     # user_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(BigInteger, primary_key=True)  # Rename to user_id, store phone number
+    user_id = Column(String(20), primary_key=True)  # Rename to user_id, store phone number
     name = Column(String(255), nullable=False)
+    #phone = Column(String(20), nullable=False)
     # email = Column(String(255), nullable=False)
     address = Column(String(255), nullable=False)
     created_at = Column(TIMESTAMP, nullable=False)

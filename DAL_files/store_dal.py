@@ -54,7 +54,7 @@ class StoreDAL:
         db.delete(store)
         db.commit()
         return True
-
+      
     @classmethod
     def get_nearest_store(cls, db: Session, latitude: float, longitude: float):
         """Find the nearest store using PostGIS ST_DistanceSphere."""

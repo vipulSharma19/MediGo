@@ -54,6 +54,7 @@ def get_store(store_id: str, db: Session = Depends(get_db)):
 @router.get("/stores/nearest")
 def find_nearest_store(latitude: float, longitude: float, db: Session = Depends(get_db)):
     nearest_store = store_dal.get_nearest_store(db, latitude, longitude)
+    print("nearest_store nearest_store",nearest_store)
     if not nearest_store:
         raise HTTPException(status_code=404, detail="No active stores found nearby.")
 

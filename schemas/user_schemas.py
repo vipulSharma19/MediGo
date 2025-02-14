@@ -17,7 +17,7 @@ class UserBase(BaseModel):
 # Schema for creating a new user
 class UserCreate(UserBase):
     address: str
-    phone: str
+    # phone: str
     # password: str  # Include password during creation
 
 # Schema for updating an existing user
@@ -31,7 +31,7 @@ class UserUpdate(BaseModel):
 
 # Response schema for User
 class User(UserBase):
-    user_id: UUID  # Unique identifier for the user
+    user_id: str  # Unique identifier for the user
 
     class Config:
         orm_mode = True

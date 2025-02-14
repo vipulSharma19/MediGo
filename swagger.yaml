@@ -478,7 +478,7 @@ components:
       type: object
       properties:
         user_id:
-          type: number
+          type: string
         name:
           type: string
         created_at:
@@ -490,6 +490,7 @@ components:
       required:
         - user_id
         - name
+        - address
         - created_at
         - updated_at
 
@@ -516,7 +517,7 @@ components:
         - $ref: '#/components/schemas/UserBase'
       properties:
         user_id:
-          type: number
+          type: string
       required:
         - user_id
     # EntityBase Schema (Base schema for entity data)
@@ -555,7 +556,7 @@ components:
           type: string
           format: uuid
         user_id:
-          type: number
+          type: string
         amount:
           type: number
           format: float
@@ -564,9 +565,6 @@ components:
         payment_status:
           type: string
         payment_timestamp:
-          type: string
-          format: date-time
-        created_at:
           type: string
           format: date-time
         updated_at:
@@ -579,7 +577,6 @@ components:
         - payment_method
         - payment_status
         - payment_timestamp
-        - created_at
         - updated_at
 
     # PaymentCreate Schema (Used for creating a new payment)
@@ -590,7 +587,7 @@ components:
           type: string
           format: uuid
         user_id:
-          type: number
+          type: string
         amount:
           type: number
           format: float
@@ -599,9 +596,6 @@ components:
         payment_status:
           type: string
         payment_timestamp:
-          type: string
-          format: date-time
-        created_at:
           type: string
           format: date-time
         updated_at:
@@ -614,7 +608,6 @@ components:
         - payment_method
         - payment_status
         - payment_timestamp
-        - created_at
         - updated_at
 
     # PaymentUpdate Schema (Used for updating an existing payment)
@@ -625,7 +618,7 @@ components:
           type: string
           format: uuid
         user_id:
-          type: number
+          type: string
         amount:
           type: number
           format: float
@@ -634,9 +627,6 @@ components:
         payment_status:
           type: string
         payment_timestamp:
-          type: string
-          format: date-time
-        created_at:
           type: string
           format: date-time
         updated_at:
@@ -654,7 +644,7 @@ components:
           type: string
           format: uuid
         user_id:
-          type: number
+          type: string
         amount:
           type: number
           format: float
@@ -663,9 +653,6 @@ components:
         payment_status:
           type: string
         payment_timestamp:
-          type: string
-          format: date-time
-        created_at:
           type: string
           format: date-time
         updated_at:
@@ -679,7 +666,6 @@ components:
         - payment_method
         - payment_status
         - payment_timestamp
-        - created_at
         - updated_at
 
 paths:
@@ -1244,7 +1230,6 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid
       responses:
         '200':
           description: User found
@@ -1264,7 +1249,6 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid
       requestBody:
         content:
           application/json:
@@ -1290,7 +1274,6 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid
       responses:
         '200':
           description: User deleted successfully
@@ -1395,4 +1378,3 @@ paths:
                     example: "Entity deleted successfully"
         '404':
           description: Entity not found
-

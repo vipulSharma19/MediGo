@@ -9,6 +9,7 @@ import os
 load_dotenv()
 
 # Initialize the database engine (replace with your actual database URI)
+
 SQLALCHEMY_DATABASE_URL = os.getenv("POSTGRES_URL")
 
 # Create the engine that will interact with the database
